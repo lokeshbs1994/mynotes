@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "713995172811",
+    "project_id": "mynotes-lokesh-project",
+    "storage_bucket": "mynotes-lokesh-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713995172811:android:2ff304245ab9626fab944e",
+        "android_client_info": {
+          "package_name": "com.newapp.mynotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "713995172811-nu3nohu2h3d6pqrj9b0uule9dfdmpglg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj9hQgyONl0dMJIfA7_BsCLh0LbSF3FgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "713995172811-nu3nohu2h3d6pqrj9b0uule9dfdmpglg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
