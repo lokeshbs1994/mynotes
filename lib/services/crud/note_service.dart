@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mynotes/services/crud/crud_exceptions.dart';
@@ -11,12 +12,19 @@ class NoteService {
 
   List<DatabaseNote> _notes = [];
 
+  //DatabaseUser? _user;
+
   static final NoteService _shared = NoteService._sharedInstance();
-  NoteService._sharedInstance();
+  NoteService._sharedInstance() {
+    _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
   factory NoteService() => _shared;
 
-  final _notesStreamController =
-      StreamController<List<DatabaseNote>>.broadcast();
+  late final StreamController<List<DatabaseNote>> _notesStreamController;
 
   Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
 
@@ -129,6 +137,7 @@ class NoteService {
     }
     const text = '';
     //create note
+
     final noteId = await db.insert(noteTable, {
       userIdColumn: owner.id,
       textColumn: text,
@@ -225,9 +234,11 @@ class NoteService {
     try {
       final docsPath = await getApplicationDocumentsDirectory();
       final dbPath = join(docsPath.path, dbName);
+
       final db = await openDatabase(dbPath);
       _db = db;
       //create the user table
+
       await db.execute(createUserTable);
       // create note table
       await db.execute(createNoteTable);
@@ -283,7 +294,7 @@ class DatabaseNote {
 
   @override
   String toString() =>
-      'Note, ID = $id, userId = $userId, isSyncedWithCloud = $isSyncedWithCloud';
+      'Note, ID = $id, userId = $userId,  text=$text, isSyncedWithCloud = $isSyncedWithCloud';
 
   @override
   bool operator ==(covariant DatabaseNote other) => id == other.id;
@@ -307,10 +318,10 @@ const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
       );''';
 
 const createNoteTable = '''CREATE TABLE IF NOT EXISTS "note" (
-	      "id"	INTEGER NOT NULL,
-	      "use_id"	INTEGER NOT NULL,
-	      "text"	TEXT,
-      	"is_synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
-	      FOREIGN KEY("use_id") REFERENCES "user"("id"),
-	      PRIMARY KEY("id" AUTOINCREMENT)
-      );''';
+	"id"	INTEGER NOT NULL,
+	"user_id" INTEGER NOT NULL,
+	"text"	TEXT,
+	"is_synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
+	FOREIGN KEY("user_id") REFERENCES "user"("id"),
+	PRIMARY KEY("id" AUTOINCREMENT)
+);''';
